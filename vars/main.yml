@@ -1,0 +1,33 @@
+role_vim:
+  install:
+    apt:
+      - python-passlib
+      - powerline
+      - vim-nox
+      - puppet
+      - puppet-lint
+      - build-essential 
+      - cmake
+      - python-dev
+      - python3-dev
+      - python-pip
+  environment:
+    home:
+      templates:
+        - puppet-lint.rc
+        - vimrc
+  vim:
+    module:
+      syntastic: 'https://github.com/vim-syntastic/syntastic.git'
+      tabular: 'https://github.com/godlygeek/tabular.git'
+      vim-addon-manager-knwon-repositories: 'https://github.com/MarcWeber/vim-addon-manager-known-repositories.git'
+      vim-airline: 'https://github.com/vim-airline/vim-airline.git'
+      vim-airline-themes: 'https://github.com/vim-airline/vim-airline-themes.git'
+      vim-fugitive: 'https://github.com/tpope/vim-fugitive.git'
+      vim-puppet: 'https://github.com/rodjek/vim-puppet.git'
+      onedark: 'https://github.com/joshdick/onedark.vim.git'
+      nerdtree: 'https://github.com/scrooloose/nerdtree.git'
+      vim-surround: 'https://github.com/tpope/vim-surround.git'
+      vim-gitgutter: 'https://github.com/airblade/vim-gitgutter.git'
+      vim-autoclose: 'https://github.com/Townk/vim-autoclose.git'
+      YouCompleteMe: 'https://github.com/Valloric/YouCompleteMe.git'
