@@ -6,15 +6,17 @@ role_vim:
       - vim-nox
       - puppet
       - puppet-lint
-      - build-essential 
+      - build-essential
       - cmake
       - python-dev
       - python3-dev
       - python-pip
+      - yamllint
   environment:
     home:
       templates:
         - puppet-lint.rc
+        - yamllint
         - vimrc
   vim:
     module:
