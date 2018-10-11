@@ -40,6 +40,9 @@ colorscheme onedark
 " ruby lint
 let g:syntastic_eruby_ruby_quiet_messages = {'regex': 'possibly useless use of .* in void context'}
 
+" UltiSnippet
+let g:UltiSnipsExpandTrigger="<c-j>"
+
 " Nerdtree
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -63,9 +66,16 @@ call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
 " its vor vim-gitgutter
-set updatetime=250
+set updatetime=500
 
 " yamllint
 let g:syntastic_yaml_checkers = ['yamllint']
 let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
+
+" todo
+let g:VimTodoListsMoveItems = 0
+
+" indentline
+let g:indentLine_char = "│"
+let g:indentLine_color_term = 237
 

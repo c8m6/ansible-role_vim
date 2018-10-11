@@ -1,5 +1,5 @@
 - hosts: all
-  vars_files: 
+  vars_files:
   - vars/main.yml
   tasks:
   - { import_tasks: tasks/main.yml }

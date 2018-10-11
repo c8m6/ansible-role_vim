@@ -4,7 +4,7 @@
 
 - name: install some needed packages
   apt: name={{item}} state=present
-  with_items: 
+  with_items:
     - "{{ role_vim.install.apt }}"
   become: true
 
@@ -29,7 +29,7 @@
 
 - name: compile vim autocomplete
   shell: |
-    git submodule update --init --recursive 
+    git submodule update --init --recursive
     ./install.py
   args:
     chdir: "{{ ansible_user_dir }}/.vim/bundle/YouCompleteMe"
