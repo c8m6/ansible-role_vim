@@ -36,6 +36,16 @@
     creates: "{{ ansible_user_dir }}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
     executable: /bin/bash
 
+- name: compile vim command-t
+  shell: |
+    git submodule update --init --recursive
+    ruby extconf.rb
+    make
+  args:
+    chdir: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t"
+    creates: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t/ext.so"
+    executable: /bin/bash
+
 - name: generate templates
   template:
     src: "{{ item }}.j2"
