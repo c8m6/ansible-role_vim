@@ -66,6 +66,15 @@ call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
 call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
+" map keys for CommandT
+nmap <unique> <C-t> <Plug>(CommandT)
+nmap <unique> <C-A-b> <Plug>(CommandTBuffer)
+nmap <unique> <C-j> <Plug>(CommandTJump)
+
+" comfortable motion
+let g:comfortable_motion_scroll_down_key = "j"
+let g:comfortable_motion_scroll_up_key = "k"
+
 " its vor vim-gitgutter
 set updatetime=1500
 
