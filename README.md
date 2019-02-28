@@ -4,7 +4,7 @@ ansible-role_vim
 Overview
 --------
 
-This ansible role installs vim and many usefull plugins and also generates a valid .vimrc
+This ansible ansible 2.4 role installs vim and many usefull plugins and also generates a valid .vimrc
 
 ## Loaded Plugins
 ```
