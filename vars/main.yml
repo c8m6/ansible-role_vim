@@ -39,6 +39,4 @@ role_vim:
       vim-todo-list: 'https://github.com/aserebryakov/vim-todo-lists.git'
       indentLine: 'https://github.com/Yggdroot/indentLine.git'
       vim-janitor: 'https://github.com/kuoe0/vim-janitor.git'
-      comfortable-motion: 'https://github.com/yuttie/comfortable-motion.vim.git'
       command-t: 'https://github.com/wincent/command-t.git'
-#      vim-autoclose: 'https://github.com/Townk/vim-autoclose.git'

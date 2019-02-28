@@ -27,7 +27,6 @@ This ansible ansible 2.4 role installs vim and many usefull plugins and also gen
       vim-todo-list
       indentLine
       vim-janitor
-      comfortable-motion
       command-t
 ```
 ## Vim Shortcuts
