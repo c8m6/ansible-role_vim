@@ -12,6 +12,7 @@ role_vim:
       - python3-dev
       - python-pip
       - yamllint
+      - ruby-dev
   environment:
     home:
       templates:
