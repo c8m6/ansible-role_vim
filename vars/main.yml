@@ -1,3 +1,4 @@
+---
 role_vim:
   install:
     apt:
@@ -41,3 +42,4 @@ role_vim:
       indentLine: 'https://github.com/Yggdroot/indentLine.git'
       vim-janitor: 'https://github.com/kuoe0/vim-janitor.git'
       command-t: 'https://github.com/wincent/command-t.git'
+      editor-config: 'https://github.com/editorconfig/editorconfig-vim.git'
