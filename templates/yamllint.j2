@@ -1,16 +1,58 @@
+#-------------------------------------------------#
+# Validator:  https://www.yamllint.com/           #
+# Docu:       https://yamllint.readthedocs.io/    #
+#-------------------------------------------------#
 ---
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
 rules:
-  trailing-spaces: enable
-  indentation:
-    spaces: consistent
-    indent-sequences: consistent
-    check-multi-line-strings: true
-  line-length:
-    max: 200
-    allow-non-breakable-words: true
-    allow-non-breakable-inline-mappings: true
-    level: warning
-  key-duplicates: {}
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 1
   colons:
     max-spaces-before: 0
     max-spaces-after: 1
+  commas:
+    max-spaces-before: 0
+    min-spaces-after: 1
+    max-spaces-after: 1
+  comments:
+    level: warning
+    require-starting-space: false
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  document-end: disable
+  document-start:
+    level: warning
+    present: true
+  empty-values:
+    forbid-in-block-mappings: false
+  empty-lines:
+    max: 1
+    max-start: 0
+    max-end: 1
+  hyphens:
+    max-spaces-after: 1
+  indentation:
+    spaces: consistent
+    indent-sequences: whatever
+    check-multi-line-strings: true
+  key-duplicates: enable
+  line-length: disable
+  new-line-at-end-of-file: enable
+  new-lines:
+    type: unix
+  trailing-spaces: enable
+  truthy:
+    level: warning
+...
