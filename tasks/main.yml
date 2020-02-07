@@ -16,6 +16,12 @@
     - "{{ role_vim.install.mac_pip }}"
   when: ansible_distribution == 'MacOSX'
 
+- name: tap with homebrew
+  homebrew_tap: name={{item}} state=present
+  with_items:
+    - "{{ role_vim.repo.homebrew }}"
+  when: ansible_distribution == 'MacOSX'
+
 - name: install some needed packages with homebrew
   homebrew: name={{item}} state=present
   with_items:

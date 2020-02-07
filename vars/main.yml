@@ -27,6 +27,7 @@ role_vim:
       - pylint
       - puppet-lint
       - coreutils
+      - cmake
   environment:
     home:
       templates:
