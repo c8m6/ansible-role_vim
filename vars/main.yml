@@ -1,5 +1,8 @@
 ---
 role_vim:
+  repo:
+    homebrew:
+      - rockyluke/devops
   install:
     apt:
       - python-passlib
@@ -14,6 +17,16 @@ role_vim:
       - python-pip
       - yamllint
       - ruby-dev
+    mac_pip:
+      - passlib
+      - powerline-status
+    homebrew:
+      - python3
+      - vim
+      - yamllint
+      - pylint
+      - puppet-lint
+      - coreutils
   environment:
     home:
       templates:
