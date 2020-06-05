@@ -39,7 +39,7 @@
 
 - name: Install vim pathogen
   get_url:
-    url: https://tpo.pe/pathogen.vim
+    url: https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
     dest: "{{ ansible_user_dir }}/.vim/autoload/pathogen.vim"
 
 - name: Install vim modules
