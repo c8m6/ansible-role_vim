@@ -5,6 +5,13 @@ role_vim:
       - rockyluke/devops
   install:
     apt:
+      - build-essential
+      - vim-nox
+      - mono-complete
+      - golong
+      - nodejs
+      - default-jdk
+      - npm
       - python-passlib
       - powerline
       - vim-nox
@@ -47,7 +54,7 @@ role_vim:
       nerdtree: 'https://github.com/scrooloose/nerdtree.git'
       vim-surround: 'https://github.com/tpope/vim-surround.git'
       vim-gitgutter: 'https://github.com/airblade/vim-gitgutter.git'
-      YouCompleteMe: 'https://github.com/Valloric/YouCompleteMe.git'
+      YouCompleteMe: 'https://github.com/ycm-core/YouCompleteMe.git'
       ultisnips: 'https://github.com/SirVer/ultisnips'
       vim-snippets: 'https://github.com/honza/vim-snippets'
       vim-bufferline: 'https://github.com/bling/vim-bufferline'
