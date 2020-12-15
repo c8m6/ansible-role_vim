@@ -14,9 +14,6 @@ set shiftwidth=2    " Indents will have a width of 4
 set softtabstop=2   " Sets the number of columns for a TAB
 set expandtab       " Expand TABs to spaces
 
-set showmatch
-autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=red
-
 syntax on
 
 filetype plugin indent on
@@ -93,9 +90,6 @@ let g:VimTodoListsMoveItems = 0
 " indentline
 let g:indentLine_char = "│"
 let g:indentLine_color_term = 237
-
-" shellcheck ignore external sources
-let g:syntastic_sh_shellcheck_args = "--external-sources --exclude=SC1091"
 
 set ignorecase
 set smartcase

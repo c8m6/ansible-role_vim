@@ -36,22 +36,27 @@
   file:
     path: "{{ ansible_user_dir }}/.vimrc"
     state: absent
-  tags:
-    - cleanup
+  when: cleanup | default(False)
 
 - name: cleanup users .viminfo
   file:
     path: "{{ ansible_user_dir }}/.viminfo"
     state: absent
-  tags:
-    - cleanup
+  when: cleanup | default(False)
+
+- name: cleanup permissions of .vim directory
+  file:
+    path: "{{ ansible_user_dir }}/.vim"
+    state: directory
+    recurse: yes
+    mode: 0755
+  when: cleanup | default(False)
 
 - name: cleanup users .vim
   file:
-    path: "{{ ansible_user_dir }}/.vim/"
+    path: "{{ ansible_user_dir }}/.vim"
     state: absent
-  tags:
-    - cleanup
+  when: cleanup | default(False)
 
 - name: create dir for vim pathogen
   file:
