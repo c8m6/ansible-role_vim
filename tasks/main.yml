@@ -53,8 +53,10 @@
 
 - name: compile vim autocomplete
   shell: |
+    git config --global url."https://".insteadOf git:// # Prevent any connection refused errors
     git submodule update --init --recursive
-    ./install.py
+    git config --global --unset-all url.https://.insteadof
+    python3 install.py --all
   args:
     chdir: "{{ ansible_user_dir }}/.vim/bundle/YouCompleteMe"
     creates: "{{ ansible_user_dir }}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
@@ -63,8 +65,7 @@
 - name: compile vim command-t
   shell: |
     git submodule update --init --recursive
-    ruby extconf.rb
-    make
+    rake make
   args:
     chdir: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t"
     creates: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t/ext.so"
