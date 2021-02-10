@@ -8,7 +8,7 @@ role_vim:
       - build-essential
       - vim-nox
       - mono-complete
-      - golong
+      - golang
       - nodejs
       - default-jdk
       - npm
