@@ -14,7 +14,7 @@ role_vim:
       - npm
       - powerline
       - vim-nox
-      - puppet
+      - puppet-agent
       - puppet-lint
       - build-essential
       - cmake

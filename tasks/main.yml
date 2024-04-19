@@ -1,4 +1,24 @@
 ---
+- name: Add puppet apt repository key
+  ansible.builtin.get_url:
+    url: http://apt.puppet.com/keyring.gpg
+    dest: /etc/apt/trusted.gpg.d/puppet.asc
+    mode: '0644'
+    force: true
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
+- name: Add puppet repository
+  apt_repository:
+    repo: deb http://apt.puppet.com {{ ansible_distribution_release }} puppet7
+    state: present
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
 - name: run apt-get update
   apt: update_cache=yes cache_valid_time=86400
   become: true
@@ -89,11 +109,11 @@
   shell: |
     git config --global url."https://".insteadOf git:// # Prevent any connection refused errors
     git submodule update --init --recursive
-    rake make
+    make
     git config --global --unset-all url.https://.insteadof
   args:
-    chdir: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t"
-    creates: "{{ ansible_user_dir }}/.vim/bundle/command-t/ruby/command-t/ext/command-t/ext.so"
+    chdir: "{{ ansible_user_dir }}/.vim/bundle/command-t/lua/wincent/commandt/lib/"
+    creates: "{{ ansible_user_dir }}/.vim/bundle/command-t/lua/wincent/commandt/lib/commandt.so"
     executable: /bin/bash
 
 - name: generate templates
