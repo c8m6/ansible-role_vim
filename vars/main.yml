@@ -12,16 +12,16 @@ role_vim:
       - nodejs
       - default-jdk
       - npm
-      - python-passlib
       - powerline
       - vim-nox
       - puppet
       - puppet-lint
       - build-essential
       - cmake
-      - python-dev
       - python3-dev
-      - python-pip
+      - python3-dev
+      - python3-pip
+      - python3-passlib
       - yamllint
       - ruby-dev
     mac_pip:

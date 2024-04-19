@@ -1,3 +1,4 @@
+---
 - name: run apt-get update
   apt: update_cache=yes cache_valid_time=86400
   become: true
@@ -6,30 +7,22 @@
     - become
 
 - name: install some needed packages
-  apt: name={{item}} state=present
-  with_items:
-    - "{{ role_vim.install.apt }}"
+  apt: name={{ role_vim.install.apt }} state=present
   become: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   tags:
     - become
 
 - name: install some needed packages with pip
-  pip: name={{item}} extra_args='--user'
-  with_items:
-    - "{{ role_vim.install.mac_pip }}"
+  pip: name={{ role_vim.install.mac_pip }} extra_args='--user'
   when: ansible_distribution == 'MacOSX'
 
 - name: tap with homebrew
-  homebrew_tap: name={{item}} state=present
-  with_items:
-    - "{{ role_vim.repo.homebrew }}"
+  homebrew_tap: name={{ role_vim.repo.homebrew }} state=present
   when: ansible_distribution == 'MacOSX'
 
 - name: install some needed packages with homebrew
-  homebrew: name={{item}} state=present
-  with_items:
-    - "{{ role_vim.install.homebrew }}"
+  homebrew: name={{ role_vim.install.homebrew }} state=present
   when: ansible_distribution == 'MacOSX'
 
 - name: cleanup users .vimrc
@@ -76,6 +69,10 @@
     update: yes
     accept_hostkey: yes
   with_dict: "{{ role_vim.vim.module }}"
+  register: repo_clone
+  failed_when:
+    - repo_clone.failed
+    - not 'Local modifications exist in repository' in repo_clone.msg
 
 - name: compile vim autocomplete
   shell: |
