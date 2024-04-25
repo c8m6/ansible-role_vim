@@ -66,10 +66,11 @@ call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
 call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
-" map keys for CommandT
-nmap <unique> <C-t> <Plug>(CommandT)
-nmap <unique> <C-A-b> <Plug>(CommandTBuffer)
-nmap <unique> <C-j> <Plug>(CommandTJump)
+" CommandT
+let g:CommandTPreferredImplementation='lua'
+map <C-b> :CommandTBuffer<CR>
+map <C-j> :CommandTJump<CR>
+map <C-t> :CommandT<CR>
 
 " comfortable motion
 let g:comfortable_motion_scroll_down_key = "j"

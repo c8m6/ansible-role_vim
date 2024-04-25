@@ -5,15 +5,17 @@ role_vim:
       - rockyluke/devops
   install:
     apt:
+      - neovim
+      - watchman
+      - ripgrep
+      - git
       - build-essential
-      - vim-nox
       - mono-complete
       - golang
       - nodejs
       - default-jdk
       - npm
       - powerline
-      - vim-nox
       - puppet-agent
       - puppet-lint
       - build-essential
@@ -29,7 +31,7 @@ role_vim:
       - powerline-status
     homebrew:
       - python3
-      - vim
+      - neovim
       - yamllint
       - pylint
       - puppet-lint
@@ -40,7 +42,7 @@ role_vim:
       templates:
         - puppet-lint.rc
         - yamllint
-        - vimrc
+
   vim:
     module:
       syntastic: 'https://github.com/vim-syntastic/syntastic.git'
