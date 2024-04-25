@@ -19,6 +19,26 @@
   tags:
     - become
 
+- name: Add neovim apt repository key
+  ansible.builtin.get_url:
+    url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x9dbb0be9366964f134855e2255f96fcf8231b6dd
+    dest: /etc/apt/trusted.gpg.d/neovim.asc
+    mode: '0644'
+    force: true
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
+- name: Add neovim repository
+  apt_repository:
+    repo: ppa:neovim-ppa/stable
+    state: present
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
 - name: run apt-get update
   apt: update_cache=yes cache_valid_time=86400
   become: true
