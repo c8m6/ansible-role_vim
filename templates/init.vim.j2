@@ -1,0 +1,125 @@
+" Vim settings
+set number
+set hlsearch
+set nowrapscan
+set wildmenu
+set hidden
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+
+set ignorecase
+set smartcase
+set showmatch
+
+set encoding=UTF-8
+
+hi MatchParen ctermbg=238
+
+syntax on
+filetype plugin indent on
+
+call plug#begin('$HOME/.config/nvim/plugins')
+Plug 'FabijanZulj/blame.nvim'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Yggdroot/indentLine'
+Plug 'airblade/vim-gitgutter'
+Plug 'arrufat/vala.vim'
+Plug 'aserebryakov/vim-todo-lists'
+Plug 'bling/vim-bufferline'
+Plug 'chr4/nginx.vim'
+Plug 'dense-analysis/ale'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'godlygeek/tabular'
+Plug 'hashivim/vim-terraform'
+Plug 'jvirtanen/vim-hcl'
+Plug 'kuoe0/vim-janitor'
+Plug 'navarasu/onedark.nvim'
+Plug 'nvim-telescope/telescope-symbols.nvim'
+Plug 'pearofducks/ansible-vim'
+Plug 'rodjek/vim-puppet'
+Plug 'roxma/nvim-yarp'
+Plug 'ryanoasis/vim-devicons'
+Plug 'saltstack/salt-vim'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'wincent/command-t', { 'do': 'cd ~/.config/nvim/plugins/command-t/lua/wincent/commandt/lib && make' }
+call plug#end()
+
+" Theme and colors
+colorscheme onedark
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'onedark'
+let g:onedark_terminal_italics = 1
+let g:onedark_color_overrides = {
+\ "black": {"gui": "#2F343F", "cterm": "233", "cterm16": "0" },
+\ "comment_grey": {"gui": "#2F343F", "cterm": "238", "cterm16": "0" },
+\ "blue": {"gui": "#2F343F", "cterm": "144", "cterm16": "0" },
+\}
+
+" Nerdtree
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" NERDTress File highlighting
+function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+ exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='.a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+ exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'.a:extension .'$#'
+endfunction
+call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
+
+" CommandT
+let g:CommandTPreferredImplementation='lua'
+map <C-b> :CommandTBuffer<CR>
+map <C-j> :CommandTJump<CR>
+map <C-t> :CommandT<CR>
+
+" todo
+let g:VimTodoListsMoveItems = 0
+
+" indentline
+let g:indentLine_char = "│"
+let g:indentLine_color_term = 237
+
+" ALE config
+let g:ale_completion_enabled = 1
+let g:ale_open_list = 1
+augroup CloseLoclistWindowGroup
+    autocmd!
+    autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
+
+" Auto-resize split on window resize
+autocmd VimResized * wincmd =
+" More natural splits
+set splitbelow          " Horizontal split below current.
+set splitright          " Vertical split to right of current.
+
+set statusline+=%#warningmsg#
+set statusline+=%*
+

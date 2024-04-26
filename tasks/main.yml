@@ -65,83 +65,6 @@
   homebrew: name={{ role_vim.install.homebrew }} state=present
   when: ansible_distribution == 'MacOSX'
 
-- name: cleanup users .vimrc
-  file:
-    path: "{{ ansible_user_dir }}/.vimrc"
-    state: absent
-  when: cleanup | default(False)
-
-- name: cleanup users .viminfo
-  file:
-    path: "{{ ansible_user_dir }}/.viminfo"
-    state: absent
-  when: cleanup | default(False)
-
-- name: cleanup permissions of .vim directory
-  file:
-    path: "{{ ansible_user_dir }}/.vim"
-    state: directory
-    recurse: yes
-    mode: 0755
-  when: cleanup | default(False)
-
-- name: cleanup users .vim
-  file:
-    path: "{{ ansible_user_dir }}/.vim"
-    state: absent
-  when: cleanup | default(False)
-
-- name: cleanup users neovim folder
-  file:
-    path: "{{ ansible_user_dir }}/.config/nvim/init.vim"
-    state: absent
-  when: cleanup | default(False)
-
-- name: create dir for vim pathogen
-  file:
-    path: "{{ ansible_user_dir }}/.config/nvim/autoload/"
-    state: directory
-
-- name: Install vim pathogen
-  get_url:
-    url: https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
-    dest: "{{ ansible_user_dir }}/.config/nvim//autoload/pathogen.vim"
-
-- name: Install vim modules
-  git:
-    repo: "{{ item.value }}"
-    dest: "{{ ansible_user_dir }}/.config/nvim/bundle/{{ item.key }}"
-    clone: yes
-    update: yes
-    depth: 1
-    recursive: true
-    accept_hostkey: yes
-  with_dict: "{{ role_vim.vim.module }}"
-  register: repo_clone
-  failed_when:
-    - repo_clone.failed
-    - not 'Local modifications exist in repository' in repo_clone.msg
-
-- name: compile vim autocomplete
-  shell: |
-    git config --global url."https://".insteadOf git:// # Prevent any connection refused errors
-    python3 install.py --all
-    git config --global --unset-all url.https://.insteadof
-  args:
-    chdir: "{{ ansible_user_dir }}/.config/nvim/bundle/YouCompleteMe"
-    creates: "{{ ansible_user_dir }}/.config/nvim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
-    executable: /bin/bash
-
-- name: compile vim command-t
-  shell: |
-    git config --global url."https://".insteadOf git:// # Prevent any connection refused errors
-    make
-    git config --global --unset-all url.https://.insteadof
-  args:
-    chdir: "{{ ansible_user_dir }}/.config/nvim/bundle/command-t/lua/wincent/commandt/lib/"
-    creates: "{{ ansible_user_dir }}/.config/nvim/bundle/command-t/lua/wincent/commandt/lib/commandt.so"
-    executable: /bin/bash
-
 - name: generate templates
   template:
     src: "{{ item }}.j2"
@@ -151,9 +74,14 @@
     mode: 0600
   with_items: "{{ role_vim.environment.home.templates }}"
 
+- name: ensures config dir exists
+  file:
+    path: "{{ ansible_user_dir }}/.config/nvim"
+    state: directory
+
 - name: generate neovim config
   template:
-    src: vimrc.j2
+    src: init.vim.j2
     dest: "{{ ansible_user_dir }}/.config/nvim/init.vim"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
@@ -166,3 +94,13 @@
   become: true
   tags:
     - become
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Install neovim Plugin Manager plug
+  shell: 'curl -fLo $HOME/.config/nvim//autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+- name: Install neovim Plugins
+  shell: nvim --headless -c 'PlugInstall --sync' -c qa
+  args:
+    creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
+    executable: /bin/bash
