@@ -38,6 +38,30 @@ role_vim:
       - puppet-lint-duplicate_class_parameters-check
       - puppet-lint-legacy_facts-check
       - puppet-lint-top_scope_facts-check
+      - puppet-lint-array_formatting-check
+      - puppet-lint-exec_idempotent-check
+      - puppet-lint-hiera
+      - puppet-lint-improved_arrow_alignment
+      - puppet-lint-legacy_facts-check
+      - puppet-lint-manifest_whitespace-check
+      - puppet-lint-module_reference-check
+      - puppet-lint-optional_default-check
+      - puppet-lint-param-docs
+      - puppet-lint-param-types
+      - puppet-lint-param_comment-check
+      - puppet-lint-parameter_type-check
+      - puppet-lint-space_after_comma-check
+      - puppet-lint-spaceship_operator_without_tag-check
+      - puppet-lint-strict_indent-check
+      - puppet-lint-summary_comment-check
+      - puppet-lint-template_file_extension-check
+      - puppet-lint-top_scope_facts-check
+      - puppet-lint-topscope-variable-check
+      - puppet-lint-trailing_comma-check
+      - puppet-lint-uncuddled_else-check
+      - puppet-lint-version_comparison-check
+      - puppet-lint-wmf_styleguide-check
+
   environment:
     home:
       templates:

@@ -52,6 +52,16 @@
   homebrew: name={{ role_vim.install.homebrew }} state=present
   when: ansible_distribution == 'MacOSX'
 
+- name: ensures config dir exists
+  file:
+    path: "{{ ansible_user_dir }}/.config/nvim/autoload"
+    state: directory
+
+- name: Install neovim Plugin Manager plug
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: "{{ ansible_user_dir }}/.config/nvim/autoload/plug.vim"
+
 - name: generate templates
   template:
     src: "{{ item }}.j2"
@@ -60,11 +70,6 @@
     group: "{{ ansible_user_gid }}"
     mode: 0600
   with_items: "{{ role_vim.environment.home.templates }}"
-
-- name: ensures config dir exists
-  file:
-    path: "{{ ansible_user_dir }}/.config/nvim"
-    state: directory
 
 - name: generate neovim config
   template:
@@ -83,18 +88,13 @@
     - become
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Install neovim Plugin Manager plug
-  shell: 'curl -fLo {{ ansible_user_dir }}/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  args:
-    creates: "{{ ansible_user_dir }}/.config/nvim/autoload/plug.vim"
-
 - name: Install neovim Plugins
-  shell: nvim --headless -c 'PlugInstall --sync' -c qa
+  shell: /usr/local/bin/nvim.appimage --headless -c 'PlugInstall --sync' -c qa
   args:
     creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
     executable: /bin/bash
 
 - name: Update neovim Plugins
-  shell: nvim --headless -c 'PlugUpdate --sync' -c qa && nvim --headless -c 'PlugClean --sync' -c qa
+  shell: /usr/local/bin/nvim.appimage --headless -c 'PlugUpdate --sync' -c qa && /usr/local/bin/nvim.appimage --headless -c 'PlugClean --sync' -c qa
   when: update | default(False)
 
