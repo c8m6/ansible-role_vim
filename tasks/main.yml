@@ -6,6 +6,11 @@
   tags:
     - become
 
+- name: ensures font dir exists
+  file:
+    path: "{{ ansible_user_dir }}/.local/share/fonts"
+    state: directory
+
 - name: install fonts
   unarchive:
     src: https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip
@@ -91,5 +96,5 @@
 
 - name: Update neovim Plugins
   shell: nvim --headless -c 'PlugUpdate --sync' -c qa && nvim --headless -c 'PlugClean --sync' -c qa
-  when: cleanup | default(False)
+  when: update | default(False)
 
