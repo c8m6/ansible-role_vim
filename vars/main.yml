@@ -19,6 +19,7 @@ role_vim:
       - python3-passlib
       - yamllint
       - ruby-dev
+      - ruby-bundler
     mac_pip:
       - passlib
       - powerline-status
@@ -60,7 +61,6 @@ role_vim:
       - puppet-lint-trailing_comma-check
       - puppet-lint-uncuddled_else-check
       - puppet-lint-version_comparison-check
-      - puppet-lint-wmf_styleguide-check
 
   environment:
     home:
