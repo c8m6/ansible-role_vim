@@ -104,7 +104,6 @@
     bundle install
     bundle exec rake gem_revendor
   args:
-    creates: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services/puppet-languageserver"
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
   when: repo_clone is changed
