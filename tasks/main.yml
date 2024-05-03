@@ -106,6 +106,9 @@
   args:
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
+  become: true
+  tags:
+    - become
   when: repo_clone.changed
 
 - name: ensures local font dir exists
