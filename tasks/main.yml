@@ -126,6 +126,6 @@
   register: installnerdfonts
 
 - debug:
-  msg: You have to restart your terminal
+    msg: You have to restart your terminal
   when: installnerdfonts.changed
 
