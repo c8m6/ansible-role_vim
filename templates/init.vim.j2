@@ -1,32 +1,55 @@
-" start Addon Manager
-execute pathogen#infect()
-
 " Vim settings
 set number
 set hlsearch
 set nowrapscan
 set wildmenu
 set hidden
+set mouse=
 
-set tabstop=2       " The width of a TAB is set to 4. Still it is a \t. It is just
-                    "   that Vim will interpret it to be having a width of 4.
-set shiftwidth=2    " Indents will have a width of 4
-set softtabstop=2   " Sets the number of columns for a TAB
-set expandtab       " Expand TABs to spaces
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+
+set ignorecase
+set smartcase
+set showmatch
+
+set encoding=UTF-8
+
+hi MatchParen ctermbg=238
 
 syntax on
-
 filetype plugin indent on
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+call plug#begin('$HOME/.config/nvim/plugins')
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Yggdroot/indentLine'
+Plug 'airblade/vim-gitgutter'
+Plug 'aserebryakov/vim-todo-lists'
+Plug 'bling/vim-bufferline'
+Plug 'c8m6/vim-puppet'
+Plug 'chr4/nginx.vim'
+Plug 'dense-analysis/ale'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'godlygeek/tabular'
+Plug 'mhinz/vim-startify'
+Plug 'navarasu/onedark.nvim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-ruby/vim-ruby'
+Plug 'wincent/command-t', { 'do': 'cd ~/.config/nvim/plugins/command-t/lua/wincent/commandt/lib && make' }
+call plug#end()
 
 " Theme and colors
+colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'onedark'
@@ -36,13 +59,6 @@ let g:onedark_color_overrides = {
 \ "comment_grey": {"gui": "#2F343F", "cterm": "238", "cterm16": "0" },
 \ "blue": {"gui": "#2F343F", "cterm": "144", "cterm16": "0" },
 \}
-colorscheme onedark
-
-" ruby lint
-let g:syntastic_eruby_ruby_quiet_messages = {'regex': 'possibly useless use of .* in void context'}
-
-" UltiSnippet
-let g:UltiSnipsExpandTrigger="<c-j>"
 
 " Nerdtree
 map <C-n> :NERDTreeToggle<CR>
@@ -72,19 +88,6 @@ map <C-b> :CommandTBuffer<CR>
 map <C-j> :CommandTJump<CR>
 map <C-t> :CommandT<CR>
 
-" comfortable motion
-let g:comfortable_motion_scroll_down_key = "j"
-let g:comfortable_motion_scroll_up_key = "k"
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
-noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
-
-" its vor vim-gitgutter
-set updatetime=1500
-
-" yamllint
-let g:syntastic_yaml_checkers = ['yamllint']
-let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
-
 " todo
 let g:VimTodoListsMoveItems = 0
 
@@ -92,9 +95,34 @@ let g:VimTodoListsMoveItems = 0
 let g:indentLine_char = "│"
 let g:indentLine_color_term = 237
 
-set ignorecase
-set smartcase
+" ALE config
+augroup CloseLoclistWindowGroup
+    autocmd!
+    autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
+let g:ale_linters = {
+\   'puppet': ['languageserver'],
+\}
+let g:ale_fixers = {
+\  '*': ['trim_whitespace'],
+\ }
+let g:ale_set_highlights = 1
+let g:ale_open_list = 1
+let g:ale_lint_on_text_changed = 'insert'
+let g:ale_lsp_suggestions = 1
+let g:ale_warn_about_trailing_blank_lines = 0
+let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
+let g:ale_puppet_languageserver_executable = $HOME . '/.config/nvim/lsp/puppet-editor-services/puppet-languageserver'
+let g:airline#extensions#ale#enabled = 1
 
-set showmatch
-hi MatchParen ctermbg=238
+" Auto-resize split on window resize
+
+autocmd VimResized * wincmd =
+" More natural splits
+set splitbelow          " Horizontal split below current.
+set splitright          " Vertical split to right of current.
+
+set statusline+=%#warningmsg#
+set statusline+=%*
 
