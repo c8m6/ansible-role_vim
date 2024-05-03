@@ -106,7 +106,7 @@
   args:
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
-  when: repo_clone is changed
+  when: repo_clone.changed
 
 - name: ensures local font dir exists
   file:
@@ -122,5 +122,10 @@
 
 - name: Install nerd fonts
   shell: fc-cache -fv
-  when: downloadnerdfonts is changed
+  when: downloadnerdfonts.changed
+  register: installnerdfonts
+
+- debug:
+  msg: You have to restart your terminal
+  when: installnerdfonts.changed
 
