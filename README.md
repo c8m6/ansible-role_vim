@@ -17,3 +17,7 @@ j / k: comfortable motion
 ```
 # ansible-playbook -i 'localhost,' --connection=local -K standalone.yml
 ```
+### To update Plugins:
+```
+# ansible-playbook -i 'localhost,' --connection=local -K standalone.yml -e update=true
+```

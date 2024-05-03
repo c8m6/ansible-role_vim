@@ -1,24 +1,4 @@
 ---
-# - name: Add nodejs apt repository key
-#   get_url:
-#     url: http://deb.nodesource.com/gpgkey/nodesource.gpg.key
-#     dest: /etc/apt/trusted.gpg.d/nodejs.asc
-#     mode: '0644'
-#     force: true
-#   become: true
-#   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-#   tags:
-#     - become
-#
-# - name: Add nodejs repository
-#   apt_repository:
-#     repo: deb http://deb.nodesource.com/node_16.x {{ ansible_distribution_release }} main
-#     state: present
-#   become: true
-#   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-#   tags:
-#     - become
-
 - name: install some needed packages
   apt: name={{ role_vim.install.apt }} state=latest
   become: true
@@ -127,3 +107,20 @@
     creates: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services/puppet-languageserver"
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
+
+- name: ensures local font dir exists
+  file:
+    path: "{{ ansible_user_dir }}/.fonts"
+    state: directory
+
+- name: Download nerd fonts
+  unarchive:
+    src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Hack.zip
+    dest: "{{ ansible_user_dir }}/.fonts"
+    remote_src: yes
+  register: downloadnerdfonts
+
+- name: Install nerd fonts
+  shell: fc-cache -fv
+  when: downloadnerdfonts is changed
+
