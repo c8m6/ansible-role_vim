@@ -27,6 +27,10 @@
 - name: Install packages with snap
   snap:
     name: "{{ role_vim.install.snap }}"
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
 
 - name: Install npm package globally.
   community.general.npm:
@@ -34,6 +38,10 @@
     global: true
   with_items:
     - "{{ role_vim.install.npm }}"
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
 
 - name: Download Neovim Package
   get_url:
@@ -73,6 +81,11 @@
     group: "{{ ansible_user_gid }}"
     mode: 0600
 
+- name: ensures lua dir exists
+  file:
+    path: "{{ ansible_user_dir }}/.config/nvim/lua"
+    state: directory
+
 - name: generate neovim lua config
   template:
     src: init.lua.j2
@@ -104,6 +117,12 @@
   file:
     path: "{{ ansible_user_dir }}/.config/nvim/lsp"
     state: directory
+
+- name: Update coq dependencies
+  shell: /usr/local/bin/nvim.appimage --headless -c 'COQdeps' -c qa
+  args:
+    creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
+    executable: /bin/bash
 
 - name: Install puppet language server
   git:

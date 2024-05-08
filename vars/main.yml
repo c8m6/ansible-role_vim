@@ -21,6 +21,8 @@ role_vim:
       - ruby-dev
       - ruby-bundler
       - universal-ctags
+      - snap
+      - npm
     snap:
       - yaml-language-server
     mac_pip:
