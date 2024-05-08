@@ -20,6 +20,9 @@ role_vim:
       - yamllint
       - ruby-dev
       - ruby-bundler
+      - universal-ctags
+    snap:
+      - yaml-language-server
     mac_pip:
       - passlib
       - powerline-status
@@ -31,6 +34,8 @@ role_vim:
       - puppet-lint
       - coreutils
       - cmake
+      - universal-ctags
+      - yaml-language-server
     gem:
       - puppet-lint-variable_contains_upcase
       - puppet-lint-roles_and_profiles-check
@@ -61,6 +66,12 @@ role_vim:
       - puppet-lint-trailing_comma-check
       - puppet-lint-uncuddled_else-check
       - puppet-lint-version_comparison-check
+      - ruby-lsp
+    npm:
+      - '@microsoft/compose-language-service'
+      - dockerfile-language-server-nodejs
+      - bash-language-server
+
 
   environment:
     home:

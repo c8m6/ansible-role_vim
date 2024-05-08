@@ -1,0 +1,21 @@
+local lspconfig = require('lspconfig')
+
+local puppetlspdir = vim.fn.expand('~/.config/nvim/lsp/puppet-editor-services/puppet-languageserver')
+require('lspconfig')['puppet'].setup {
+  cmd = { puppetlspdir, "--stdio", "--puppet-settings=--moduledir,./modules" }
+}
+
+require('lspconfig')['dockerls'].setup {}
+require('lspconfig')['docker_compose_language_service'].setup {}
+require('lspconfig')['yamlls'].setup {}
+
+
+require('lspconfig')['bashls'].setup {}
+require('lspconfig')['ruby_lsp'].setup {}
+
+
+
+require('trouble').setup {
+  auto_open = true, -- automatically open the list when you have diagnostics
+  auto_close = true, -- automatically close the list when you have no diagnostics
+}
