@@ -1,21 +1,62 @@
-local lspconfig = require('lspconfig')
+-- vim diagnostic
+local config = {
+  signs = {
+    active = signs, -- show signs
+  },
+  update_in_insert = false,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = true,
+    style = 'minimal',
+    border = 'single',
+    source = 'always',
+    header = 'Diagnostic',
+    prefix = '',
+  },
+}
+vim.diagnostic.config(config)
+local signs = {
+  Error = "",
+  Warn = "",
+  Hint = "💡",
+  Info = "",
+  DiagnosticSign =  "💡",
+}
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+end
 
+-- lsp config
+local lspconfig = require('lspconfig')
 local puppetlspdir = vim.fn.expand('~/.config/nvim/lsp/puppet-editor-services/puppet-languageserver')
 require('lspconfig')['puppet'].setup {
-  cmd = { puppetlspdir, "--stdio", "--puppet-settings=--moduledir,./modules" }
+  cmd = { puppetlspdir, "--stdio", "--puppet-settings=--moduledir,./modules" },
+  root_dir = require("lspconfig.util").root_pattern(".git")
 }
-
 require('lspconfig')['dockerls'].setup {}
 require('lspconfig')['docker_compose_language_service'].setup {}
 require('lspconfig')['yamlls'].setup {}
-
-
 require('lspconfig')['bashls'].setup {}
+require('lspconfig')['rubocop'].setup {}
 require('lspconfig')['ruby_lsp'].setup {}
+require('lspconfig')['ansiblels'].setup {}
+require('lspconfig')['nginx_language_server'].setup {}
+require('lspconfig')['pylsp'].setup {}
 
+-- filetypes
+vim.filetype.add({
+  pattern = {
+    [".*/tasks/.*.yml"] = "yaml.ansible",
+    ["docker-.y*"] = "yaml.docker"
+  },
+})
 
-
+-- Auto open and close trouble window
 require('trouble').setup {
   auto_open = true, -- automatically open the list when you have diagnostics
   auto_close = true, -- automatically close the list when you have no diagnostics
 }
+
+

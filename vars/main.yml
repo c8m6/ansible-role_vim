@@ -23,11 +23,16 @@ role_vim:
       - universal-ctags
       - snap
       - npm
+      - shellcheck
+      - ansible-lint
     snap:
-      - yaml-language-server
+    pip:
+      - nginx-language-server
+      - python-lsp-server
     mac_pip:
       - passlib
       - powerline-status
+      - ansible-lint
     homebrew:
       - python3
       - neovim
@@ -37,7 +42,7 @@ role_vim:
       - coreutils
       - cmake
       - universal-ctags
-      - yaml-language-server
+      - shellcheck
     gem:
       - puppet-lint-variable_contains_upcase
       - puppet-lint-roles_and_profiles-check
@@ -73,7 +78,8 @@ role_vim:
       - '@microsoft/compose-language-service'
       - dockerfile-language-server-nodejs
       - bash-language-server
-
+      - vim-language-server
+      - '@ansible/ansible-language-server'
 
   environment:
     home:

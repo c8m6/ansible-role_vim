@@ -26,11 +26,11 @@ call plug#begin('$HOME/.config/nvim/plugins')
 Plug 'Yggdroot/indentLine'
 Plug 'airblade/vim-gitgutter'
 Plug 'aserebryakov/vim-todo-lists'
-Plug 'bling/vim-bufferline'
 Plug 'c8m6/vim-puppet'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'folke/trouble.nvim', {'branch': 'main'}
 Plug 'godlygeek/tabular'
+Plug 'mateuszwieloch/automkdir.nvim'
 Plug 'mhinz/vim-startify'
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
@@ -47,11 +47,16 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wincent/command-t', { 'do': 'cd ~/.config/nvim/plugins/command-t/lua/wincent/commandt/lib && make' }
+Plug 'zbirenbaum/neodim'
+Plug 'itspriddle/vim-shellcheck'
+Plug 'ngmy/vim-rubocop'
+Plug 'jlcrochet/vim-ruby'
 call plug#end()
 
 " Theme and colors
 colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#languageclient#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'onedark'
 let g:onedark_terminal_italics = 1
@@ -106,7 +111,5 @@ set splitright          " Vertical split to right of current.
 
 set statusline+=%#warningmsg#
 set statusline+=%*
-
-autocmd BufNewFile,BufRead docker-compose.y* set filetype=yaml.docker-compose
 
 lua require('init')
