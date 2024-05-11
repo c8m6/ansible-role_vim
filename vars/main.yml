@@ -22,7 +22,7 @@ role_vim:
       - ruby-bundler
       - universal-ctags
       - snap
-      - npm
+      - nodejs
       - shellcheck
       - ansible-lint
     snap:

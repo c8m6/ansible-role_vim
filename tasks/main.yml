@@ -1,10 +1,30 @@
 ---
-- name: Install some needed packages
+- name: Add nodejs apt repository key
+  ansible.builtin.get_url:
+    url: http://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    dest: /etc/apt/trusted.gpg.d/nodejs.asc
+    mode: '0644'
+    force: true
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
+- name: Add nodejs repository
+  ansible.builtin.apt_repository:
+    repo: deb http://deb.nodesource.com/node_16.x {{ ansible_distribution_release }} main
+    state: present
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
+- name: Install some needed packages with apt
   ansible.builtin.apt:
     name: "{{ role_vim.install.apt }}"
     state: present
+    update-cache: true
   become: true
-  #  update_cache: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   tags:
     - become
@@ -43,7 +63,7 @@
   community.general.snap:
     name: "{{ role_vim.install.snap }}"
   become: true
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: role_vim.install.snap and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
   tags:
     - become
 
@@ -156,15 +176,13 @@
     version: main
   register: repo_clone
 
-- name: compile puppet language server
-  ansible.builtin.shell:
+- name: Compile puppet language server
+  ansible.builtin.shell: |
     bundle install
     bundle exec rake gem_revendor
-    touch installed.ansible
   args:
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
-  creates: installed.ansible
   become: true
   tags:
     - become
