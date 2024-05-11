@@ -5,8 +5,6 @@ This ansible role installs vi (neovim) and many usefull plugins (especially for 
 
 ## Overview
 
-<<<<<<< HEAD
-=======
 ![image](https://github.com/c8m6/ansible-role_vim/assets/35730763/73aead48-2996-401b-bd29-9b0d76074b94)
 
 Use <CTRL> + t to open fuzzy search window.
@@ -25,7 +23,6 @@ Have a look to your mistakes ;-)
 
 ----------
 
->>>>>>> dev
 ### Auto installed Language Server
 
 - Puppet
