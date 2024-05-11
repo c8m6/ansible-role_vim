@@ -23,19 +23,21 @@ syntax on
 filetype plugin indent on
 
 call plug#begin('$HOME/.config/nvim/plugins')
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Yggdroot/indentLine'
 Plug 'airblade/vim-gitgutter'
 Plug 'aserebryakov/vim-todo-lists'
-Plug 'bling/vim-bufferline'
 Plug 'c8m6/vim-puppet'
-Plug 'chr4/nginx.vim'
-Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'folke/trouble.nvim', {'branch': 'main'}
 Plug 'godlygeek/tabular'
+Plug 'mateuszwieloch/automkdir.nvim'
 Plug 'mhinz/vim-startify'
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 Plug 'navarasu/onedark.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-tree/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-eunuch'
@@ -44,13 +46,17 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-ruby/vim-ruby'
 Plug 'wincent/command-t', { 'do': 'cd ~/.config/nvim/plugins/command-t/lua/wincent/commandt/lib && make' }
+Plug 'zbirenbaum/neodim'
+Plug 'itspriddle/vim-shellcheck'
+Plug 'ngmy/vim-rubocop'
+Plug 'jlcrochet/vim-ruby'
 call plug#end()
 
 " Theme and colors
 colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#languageclient#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'onedark'
 let g:onedark_terminal_italics = 1
@@ -95,29 +101,9 @@ let g:VimTodoListsMoveItems = 0
 let g:indentLine_char = "│"
 let g:indentLine_color_term = 237
 
-" ALE config
-augroup CloseLoclistWindowGroup
-    autocmd!
-    autocmd QuitPre * if empty(&buftype) | lclose | endif
-augroup END
-let g:ale_linters = {
-\   'puppet': ['languageserver'],
-\}
-let g:ale_fixers = {
-\  '*': ['trim_whitespace'],
-\ }
-let g:ale_set_highlights = 1
-let g:ale_open_list = 1
-let g:ale_lint_on_text_changed = 'insert'
-let g:ale_lsp_suggestions = 1
-let g:ale_warn_about_trailing_blank_lines = 0
-let g:ale_completion_enabled = 1
-let g:ale_completion_autoimport = 1
-let g:ale_puppet_languageserver_executable = $HOME . '/.config/nvim/lsp/puppet-editor-services/puppet-languageserver'
-let g:airline#extensions#ale#enabled = 1
+let g:coq_settings = { 'auto_start': 'shut-up' }
 
 " Auto-resize split on window resize
-
 autocmd VimResized * wincmd =
 " More natural splits
 set splitbelow          " Horizontal split below current.
@@ -126,3 +112,4 @@ set splitright          " Vertical split to right of current.
 set statusline+=%#warningmsg#
 set statusline+=%*
 
+lua require('init')

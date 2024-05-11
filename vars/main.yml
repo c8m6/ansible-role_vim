@@ -20,9 +20,19 @@ role_vim:
       - yamllint
       - ruby-dev
       - ruby-bundler
+      - universal-ctags
+      - snap
+      - npm
+      - shellcheck
+      - ansible-lint
+    snap:
+    pip:
+      - nginx-language-server
+      - python-lsp-server
     mac_pip:
       - passlib
       - powerline-status
+      - ansible-lint
     homebrew:
       - python3
       - neovim
@@ -31,6 +41,8 @@ role_vim:
       - puppet-lint
       - coreutils
       - cmake
+      - universal-ctags
+      - shellcheck
     gem:
       - puppet-lint-variable_contains_upcase
       - puppet-lint-roles_and_profiles-check
@@ -61,6 +73,13 @@ role_vim:
       - puppet-lint-trailing_comma-check
       - puppet-lint-uncuddled_else-check
       - puppet-lint-version_comparison-check
+      - ruby-lsp
+    npm:
+      - '@microsoft/compose-language-service'
+      - dockerfile-language-server-nodejs
+      - bash-language-server
+      - vim-language-server
+      - '@ansible/ansible-language-server'
 
   environment:
     home:

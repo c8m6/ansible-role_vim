@@ -1,31 +1,65 @@
 ---
-- name: install some needed packages
-  apt: name={{ role_vim.install.apt }} state=latest
+- name: Install some needed packages
+  ansible.builtin.apt:
+    name: "{{ role_vim.install.apt }}"
+    state: present
   become: true
   #  update_cache: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   tags:
     - become
 
-- name: install some mac specific packages with pip
-  pip: name={{ role_vim.install.mac_pip }} extra_args='--user'
+- name: Install some mac specific packages with pip
+  ansible.builtin.pip:
+    name: "{{ role_vim.install.mac_pip }}"
+    extra_args: '--user'
   when: ansible_distribution == 'MacOSX'
 
-- name: install packages with gem
-  gem: name={{ item }} state=present
+- name: Install some packages with pip
+  ansible.builtin.pip:
+    name: "{{ role_vim.install.pip }}"
+    extra_args: '--user'
+
+- name: Install packages with gem
+  community.general.gem:
+    name: "{{ item }}"
+    state: present
   with_items:
     - "{{ role_vim.install.gem }}"
 
-- name: tap with homebrew
-  homebrew_tap: name={{ role_vim.repo.homebrew }} state=present
+- name: Tap with homebrew
+  community.general.homebrew_tap:
+    name: "{{ role_vim.repo.homebrew }}"
+    state: present
   when: ansible_distribution == 'MacOSX'
 
-- name: install some needed packages with homebrew
-  homebrew: name={{ role_vim.install.homebrew }} state=present
+- name: Install some needed packages with homebrew
+  community.general.homebrew:
+    name: "{{ role_vim.install.homebrew }}"
+    state: present
   when: ansible_distribution == 'MacOSX'
+
+- name: Install packages with snap
+  community.general.snap:
+    name: "{{ role_vim.install.snap }}"
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
+
+- name: Install npm package globally.
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+  with_items:
+    - "{{ role_vim.install.npm }}"
+  become: true
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags:
+    - become
 
 - name: Download Neovim Package
-  get_url:
+  ansible.builtin.get_url:
     url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
     dest: /usr/local/bin/nvim.appimage
     mode: '0755'
@@ -35,35 +69,51 @@
   tags:
     - become
 
-- name: ensures config dir exists
-  file:
+- name: Ensures config dir exists
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.config/nvim/autoload"
     state: directory
+    mode: '0700'
 
 - name: Install neovim Plugin Manager plug
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: "{{ ansible_user_dir }}/.config/nvim/autoload/plug.vim"
+    mode: '0600'
 
-- name: generate templates
-  template:
+- name: Generate templates
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "{{ ansible_user_dir }}/.{{ item }}"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
-    mode: 0600
+    mode: '0600'
   with_items: "{{ role_vim.environment.home.templates }}"
 
-- name: generate neovim config
-  template:
+- name: Generate neovim config
+  ansible.builtin.template:
     src: init.vim.j2
     dest: "{{ ansible_user_dir }}/.config/nvim/init.vim"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
-    mode: 0600
+    mode: '0600'
+
+- name: Ensures lua dir exists
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/nvim/lua"
+    state: directory
+    mode: '0700'
+
+- name: Generate neovim lua config
+  ansible.builtin.template:
+    src: init.lua.j2
+    dest: "{{ ansible_user_dir }}/.config/nvim/lua/init.lua"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    mode: '0600'
 
 - name: Update alternatives
-  alternatives:
+  community.general.alternatives:
     name: vi
     path: /usr/local/bin/nvim.appimage
   become: true
@@ -72,63 +122,75 @@
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Install neovim Plugins
-  shell: /usr/local/bin/nvim.appimage --headless -c 'PlugInstall --sync' -c qa
+  ansible.builtin.shell: /usr/local/bin/nvim.appimage --headless -c 'PlugInstall --sync' -c qa
   args:
     creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
     executable: /bin/bash
 
 - name: Update neovim Plugins
-  shell: /usr/local/bin/nvim.appimage --headless -c 'PlugUpdate --sync' -c qa && /usr/local/bin/nvim.appimage --headless -c 'PlugClean --sync' -c qa
+  ansible.builtin.shell: |
+    /usr/local/bin/nvim.appimage --headless -c 'PlugUpdate --sync' -c qa && /usr/local/bin/nvim.appimage --headless -c 'PlugClean --sync' -c qa
   when: update | default(False)
+  changed_when: myoutput.rc != 0
 
-- name: ensures lsp dir exists
-  file:
+- name: Ensures lsp dir exists
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.config/nvim/lsp"
     state: directory
+    mode: '0700'
+
+- name: Update coq dependencies
+  ansible.builtin.shell: /usr/local/bin/nvim.appimage --headless -c 'COQdeps' -c qa
+  args:
+    creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
+    executable: /bin/bash
 
 - name: Install puppet language server
-  git:
+  ansible.builtin.git:
     repo: https://github.com/lingua-pupuli/puppet-editor-services.git
     dest: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
-    clone: yes
-    update: yes
+    clone: true
+    update: false
     depth: 1
-    accept_hostkey: yes
+    accept_hostkey: true
+    version: main
   register: repo_clone
-  failed_when:
-    - repo_clone.failed
-    - not 'Local modifications exist in repository' in repo_clone.msg
 
 - name: compile puppet language server
-  shell: |
+  ansible.builtin.shell:
     bundle install
     bundle exec rake gem_revendor
+    touch installed.ansible
   args:
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
+  creates: installed.ansible
   become: true
   tags:
     - become
-  when: repo_clone.changed
 
-- name: ensures local font dir exists
-  file:
+- name: Ensures local font dir exists
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.fonts"
     state: directory
+    mode: '0700'
 
 - name: Download nerd fonts
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Hack.zip
     dest: "{{ ansible_user_dir }}/.fonts"
-    remote_src: yes
+    remote_src: true
+    mode: '0600'
   register: downloadnerdfonts
 
 - name: Install nerd fonts
-  shell: fc-cache -fv
+  ansible.builtin.command: fc-cache -fv
   when: downloadnerdfonts.changed
   register: installnerdfonts
+  changed_when: myoutput.rc != 0
+  failed_when: myoutput.rc != 0
 
-- debug:
+- name: Debug message to ensure the user is restarting his terminal
+  ansible.builtin.debug:
     msg: You have to restart your terminal
   when: installnerdfonts.changed
-
