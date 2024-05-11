@@ -1,9 +1,6 @@
 ansible-role_vim
 ================
 
-Overview
---------
-
 This ansible role installs vi (neovim) and many usefull plugins (especially for puppet development) and also generates a valid init.vim configuration file.
 
 ## Overview
@@ -50,9 +47,11 @@ This ansible role installs vi (neovim) and many usefull plugins (especially for 
 
 ## Vim Shortcuts for plugins
 
+```
 <ctrl> T: CommanderT (fuzzysearch)
 <ctrl> N: Nerdtree
 j / k: comfortable motion
+```
 
 ## Use this role standalone (not included as role in an existing playbook)
 
