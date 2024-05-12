@@ -39,7 +39,7 @@
   ansible.builtin.pip:
     name: "{{ role_vim.install.pip }}"
     extra_args: '--user'
-  when: (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int <= 24) or ansible_distribution != 'Ubuntu'
+  when: (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 24) or ansible_distribution != 'Ubuntu'
 
 - name: Install some packages with pip for ubuntu 24
   ansible.builtin.pip:
