@@ -59,8 +59,16 @@ require('trouble').setup {
     diagnostics = {
       auto_open = true, -- automatically open the list when you have diagnostics
       auto_close = true, -- automatically close the list when you have no diagnostics
+      groups = {
+        { "filename", format = "{file_icon} {basename:Title} {count}" },
+      },
+      filter = { buf = 0 }, -- filter diagnostics to the current buffer
     }
   }
 }
+require('dd').setup({
+  -- The time to wait before displaying newly produced diagnostics.
+  timeout = 0
+})
 
 
