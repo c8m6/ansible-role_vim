@@ -5,57 +5,51 @@ role_vim:
       - rockyluke/devops
   install:
     apt:
-      - watchman
-      - ripgrep
-      - git
-      - build-essential
-      - mono-complete
-      - powerline
-      - puppet-lint
+      - ansible-lint
       - build-essential
       - cmake
-      - python3-dev
-      - python3-pip
-      - python3-passlib
-      - python3-venv
-      - yamllint
-      - ruby-dev
-      - ruby-bundler
-      - universal-ctags
-      - snap
+      - git
+      - mono-complete
       - nodejs
+      - npm
+      - powerline
+      - puppet-lint
+      - python3-dev
+      - python3-passlib
+      - python3-pip
+      - python3-venv
+      - ripgrep
+      - ruby-bundler
+      - ruby-dev
       - shellcheck
-      - ansible-lint
-    snap:
+      - universal-ctags
+      - vim
+      - watchman
+      - yamllint
     pip:
       - nginx-language-server
       - python-lsp-server
     mac_pip:
+      - ansible-lint
       - passlib
       - powerline-status
-      - ansible-lint
     homebrew:
-      - python3
-      - neovim
-      - yamllint
-      - pylint
-      - puppet-lint
-      - coreutils
       - cmake
-      - universal-ctags
+      - coreutils
+      - neovim
+      - puppet-lint
+      - pylint
+      - python3
       - shellcheck
+      - universal-ctags
+      - yamllint
     gem:
-      - puppet-lint-variable_contains_upcase
-      - puppet-lint-roles_and_profiles-check
-      - puppet-lint-strict_indent-check
-      - puppet-lint-resource_reference_syntax
-      - puppet-lint-duplicate_class_parameters-check
-      - puppet-lint-legacy_facts-check
-      - puppet-lint-top_scope_facts-check
       - puppet-lint-array_formatting-check
+      - puppet-lint-duplicate_class_parameters-check
       - puppet-lint-exec_idempotent-check
       - puppet-lint-hiera
       - puppet-lint-improved_arrow_alignment
+      - puppet-lint-legacy_facts-check
       - puppet-lint-legacy_facts-check
       - puppet-lint-manifest_whitespace-check
       - puppet-lint-module_reference-check
@@ -64,23 +58,29 @@ role_vim:
       - puppet-lint-param-types
       - puppet-lint-param_comment-check
       - puppet-lint-parameter_type-check
+      - puppet-lint-resource_reference_syntax
+      - puppet-lint-roles_and_profiles-check
       - puppet-lint-space_after_comma-check
       - puppet-lint-spaceship_operator_without_tag-check
+      - puppet-lint-strict_indent-check
       - puppet-lint-strict_indent-check
       - puppet-lint-summary_comment-check
       - puppet-lint-template_file_extension-check
       - puppet-lint-top_scope_facts-check
+      - puppet-lint-top_scope_facts-check
       - puppet-lint-topscope-variable-check
       - puppet-lint-trailing_comma-check
       - puppet-lint-uncuddled_else-check
+      - puppet-lint-variable_contains_upcase
       - puppet-lint-version_comparison-check
       - ruby-lsp
     npm:
-      - '@microsoft/compose-language-service'
-      - dockerfile-language-server-nodejs
-      - bash-language-server
-      - vim-language-server
       - '@ansible/ansible-language-server'
+      - '@microsoft/compose-language-service'
+      - bash-language-server
+      - dockerfile-language-server-nodejs
+      - vim-language-server
+      - yaml-language-server
 
   environment:
     home:

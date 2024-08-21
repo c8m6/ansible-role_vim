@@ -45,7 +45,7 @@ Have a look to your mistakes ;-)
 
 - automkdir.nvim (Automatically creates non-existent parent directories when writing a file)
 - command-t (provides an extremely fast "fuzzy" mechanism)
-- coq (auto complition)
+- cmp (auto complition)
 - editorconfig-vim (Editor config)
 - indentLine (displaying thin vertical lines at each indentation level)
 - nerdtree (a tree Explorer)
@@ -79,7 +79,8 @@ j / k: comfortable motion
 # ansible-playbook -i 'localhost,' --connection=local -K standalone.yml
 ```
 ### To update Plugins:
+Type into nvim
+```
+:PlugUpdate
+```
 
-```
-# ansible-playbook -i 'localhost,' --connection=local -K standalone.yml -e update=true
-```

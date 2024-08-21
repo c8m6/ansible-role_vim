@@ -1,24 +1,4 @@
 ---
-- name: Add nodejs apt repository key
-  ansible.builtin.get_url:
-    url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
-    dest: /etc/apt/trusted.gpg.d/nodejs.asc
-    mode: '0644'
-    force: true
-  become: true
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags:
-    - become
-
-- name: Add nodejs repository
-  ansible.builtin.apt_repository:
-    repo: deb http://deb.nodesource.com/node_20.x nodistro main
-    state: present
-  become: true
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags:
-    - become
-
 - name: Install some needed packages with apt
   ansible.builtin.apt:
     name: "{{ role_vim.install.apt }}"
@@ -26,8 +6,6 @@
     update-cache: true
   become: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags:
-    - become
 
 - name: Install some mac specific packages with pip
   ansible.builtin.pip:
@@ -66,14 +44,6 @@
     state: present
   when: ansible_distribution == 'MacOSX'
 
-- name: Install packages with snap
-  community.general.snap:
-    name: "{{ role_vim.install.snap }}"
-  become: true
-  when: role_vim.install.snap and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
-  tags:
-    - become
-
 - name: Install npm package
   community.general.npm:
     name: "{{ item }}"
@@ -81,20 +51,48 @@
   with_items:
     - "{{ role_vim.install.npm }}"
   become: true
+
+- name: Ensures /opt/neovim folder exists
+  ansible.builtin.file:
+    path: "/opt/neovim"
+    state: directory
+    mode: '0755'
+  become: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags:
-    - become
 
 - name: Download Neovim Package
   ansible.builtin.get_url:
     url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    dest: /usr/local/bin/nvim.appimage
+    dest: /opt/neovim/nvim.appimage
     mode: '0755'
     force: true
   become: true
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags:
-    - become
+
+- name: Create a symbolic link to nvim app image
+  ansible.builtin.file:
+    src: /opt/neovim/nvim.appimage
+    dest: /opt/neovim/nvim
+    state: link
+  become: true
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and (not lookup('ansible.builtin.env', 'CONTAINER') )
+
+- name: Extract neovim app image
+  ansible.builtin.shell: |
+    /opt/neovim/nvim.appimage --appimage-extract
+  args:
+    chdir: /opt/neovim
+    creates: /opt/neovim/squashfs-root/AppRun
+  become: true
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and lookup('ansible.builtin.env', 'CONTAINER')
+
+- name: Create a symbolic link to extracted nvim app image
+  ansible.builtin.file:
+    src: /opt/neovim/squashfs-root/AppRun
+    dest: /opt/neovim/nvim
+    state: link
+  become: true
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and lookup('ansible.builtin.env', 'CONTAINER')
 
 - name: Ensures config dir exists
   ansible.builtin.file:
@@ -142,35 +140,29 @@
 - name: Update alternatives
   community.general.alternatives:
     name: vi
-    path: /usr/local/bin/nvim.appimage
+    link: /usr/bin/vi
+    path: /opt/neovim/nvim
   become: true
-  tags:
-    - become
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Install neovim Plugins
-  ansible.builtin.shell: /usr/local/bin/nvim.appimage --headless -c 'PlugInstall --sync' -c qa
+  ansible.builtin.shell: /opt/neovim/nvim --headless -c 'PlugInstall --sync' -c qa
   args:
     creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
     executable: /bin/bash
 
 - name: Update neovim Plugins
   ansible.builtin.shell: |
-    /usr/local/bin/nvim.appimage --headless -c 'PlugUpdate --sync' -c qa && /usr/local/bin/nvim.appimage --headless -c 'PlugClean --sync' -c qa
+    /opt/neovim/nvim --headless -c 'PlugUpdate --sync' -c qa && /opt/neovim/nvim --headless -c 'PlugClean --sync' -c qa
   when: update | default(False)
-  changed_when: myoutput.rc != 0
+  register: updateneovimplugins
+  changed_when: updateneovimplugins.rc != 0
 
 - name: Ensures lsp dir exists
   ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.config/nvim/lsp"
     state: directory
     mode: '0700'
-
-- name: Update coq dependencies
-  ansible.builtin.shell: /usr/local/bin/nvim.appimage --headless -c 'COQdeps' -c qa
-  args:
-    creates: "{{ ansible_user_dir }}/.config/nvim/plugins"
-    executable: /bin/bash
 
 - name: Install puppet language server
   ansible.builtin.git:
@@ -191,8 +183,6 @@
     chdir: "{{ ansible_user_dir }}/.config/nvim/lsp/puppet-editor-services"
     executable: /bin/bash
   become: true
-  tags:
-    - become
 
 - name: Ensures local font dir exists
   ansible.builtin.file:
@@ -210,12 +200,13 @@
 
 - name: Install nerd fonts
   ansible.builtin.command: fc-cache -fv
-  when: downloadnerdfonts.changed
+  when: downloadnerdfonts.changed and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
   register: installnerdfonts
-  changed_when: myoutput.rc != 0
-  failed_when: myoutput.rc != 0
+  changed_when: installnerdfonts.rc != 0
+  failed_when: installnerdfonts.rc != 0
 
 - name: Debug message to ensure the user is restarting his terminal
   ansible.builtin.debug:
     msg: You have to restart your terminal
   when: installnerdfonts.changed
+ 
