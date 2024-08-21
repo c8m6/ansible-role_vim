@@ -15,15 +15,6 @@ RUN apt-get update && \
       sudo \
       ansible
 
-#RUN { \
-#  echo '#!/bin/bash'; \
-#  echo 'sudo chown -R $(id -un):$(id -gn) /home/nvim'; \
-#  echo 'sudo ln -s /home/nvim $HOME'; \
-#  echo 'export PATH="$HOME/.local/bin:$PATH"'; \
-#  echo '/opt/neovim/nvim "$@"'; \
-#} > /entry-point.sh \
-#	&& chmod +x /entry-point.sh
-
 RUN useradd \
     --create-home \
     --groups sudo \
