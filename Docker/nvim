@@ -4,8 +4,8 @@ GITDIR=$(git rev-parse --show-toplevel 2> /dev/null)
 PRDIR="${GITDIR:-$PWD}"
 PREFIX=/NVIM
 
-for volume in nvim-share nvim-state nvim-config; do
-  docker volume inspect $volume > /dev/null 2>&1 || docker volume create $volume
+for volume in nvim-share-$(id -un) nvim-state-$(id -un) nvim-config-$(id -un); do
+  docker volume inspect "${volume}" > /dev/null 2>&1 || docker volume create "${volume}" /dev/null
 done
 
 docker run --rm -ti --name "nvim-${$}" \
@@ -16,4 +16,4 @@ docker run --rm -ti --name "nvim-${$}" \
   -w "${PREFIX}${PWD}" \
   --user "$(id -u):$(id -g)" \
   c8m6/nvim:latest \
-  -c "cd ${PREFIX}${PWD}" $@ 
+  -c "cd ${PREFIX}${PWD}" "${@}"
