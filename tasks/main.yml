@@ -209,4 +209,4 @@
   ansible.builtin.debug:
     msg: You have to restart your terminal
   when: installnerdfonts.changed
- 
+

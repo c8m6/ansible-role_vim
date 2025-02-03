@@ -96,7 +96,9 @@ require('lspconfig')['dockerls'].setup {}
 require('lspconfig')['docker_compose_language_service'].setup {}
 require('lspconfig')['yamlls'].setup {}
 require('lspconfig')['bashls'].setup {}
-require('lspconfig')['rubocop'].setup {}
+require('lspconfig')['rubocop'].setup {
+  cmd = { 'rubocop', '--lsp' }
+}
 require('lspconfig')['ruby_lsp'].setup {
   cmd = { '/home/nvim/.local/share/gem/ruby/3.2.0/bin/ruby-lsp' },
 }
@@ -118,6 +120,7 @@ require('trouble').setup {
     diagnostics = {
       auto_open = true, -- automatically open the list when you have diagnostics
       auto_close = true, -- automatically close the list when you have no diagnostics
+      pinned = true,
       groups = {
         { "filename", format = "{file_icon} {basename:Title} {count}" },
       },

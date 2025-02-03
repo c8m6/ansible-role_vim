@@ -23,9 +23,9 @@ role_vim:
       - ruby-dev
       - shellcheck
       - universal-ctags
-      - vim
       - watchman
       - yamllint
+      - unzip
     pip:
       - nginx-language-server
       - python-lsp-server

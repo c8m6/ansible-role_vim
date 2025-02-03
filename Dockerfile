@@ -8,12 +8,13 @@ ENV HOME=/home/nvim
 RUN apt-get update && \
     apt-get -y dist-upgrade && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+      ansible \
+      bundler \
+      ca-certificates \
       curl \
       git \
-      ca-certificates \
       lsb-release \
-      sudo \
-      ansible
+      sudo
 
 RUN useradd \
     --create-home \
@@ -31,7 +32,9 @@ RUN ansible-playbook -i 'localhost,' --connection=local -K standalone.yml
 
 WORKDIR /NVIM
 RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -rf /opt/ansible-role_vim
-RUN sudo chmod -R o=u ${HOME}
+RUN sudo chmod -R o=u ${HOME} /var/lib/gems /usr/local/bin
+RUN bundle config set --local path "${HOME}/bundler"
+
 
 ENTRYPOINT ["/opt/neovim/nvim"]
 
