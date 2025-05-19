@@ -89,8 +89,14 @@ try [Docker/nvim](Docker/nvim) and use [Image](https://hub.docker.com/r/c8m6/nvi
 ```bash
 #!/bin/bash
 
+# SET NVIM_PROJECT_DIR as environment variable to mount your project dir, independent from you current dir
+
 GITDIR=$(git rev-parse --show-toplevel 2> /dev/null)
-PRDIR="${GITDIR:-$PWD}"
+if [[ $NVIM_PROJECT_DIR ]] ; then
+  PRDIR=$NVIM_PROJECT_DIR
+else
+  PRDIR="${GITDIR:-$PWD}"
+fi
 PREFIX=/NVIM
 
 volume="nvim-home-$(id -un)"
@@ -104,3 +110,4 @@ docker run --rm -ti --name "nvim-${$}" \
   c8m6/nvim:latest \
   -c "cd ${PREFIX}${PWD}" "${@}"
 ```
+
