@@ -91,23 +91,50 @@ try [Docker/nvim](Docker/nvim) and use [Image](https://hub.docker.com/r/c8m6/nvi
 
 # SET NVIM_PROJECT_DIR as environment variable to mount your project dir, independent from you current dir
 
-GITDIR=$(git rev-parse --show-toplevel 2> /dev/null)
-if [[ $NVIM_PROJECT_DIR ]] ; then
-  PRDIR=$NVIM_PROJECT_DIR
-else
-  PRDIR="${GITDIR:-$PWD}"
-fi
 PREFIX=/NVIM
 
+# Set all mount points
+MOUNTDIRS+=("$NVIM_PROJECT_DIR")
+MOUNTDIRS+=("$(git rev-parse --show-toplevel 2> /dev/null)")
+MOUNTDIRS+=("$PWD")
+
+for arg in "$@" ; do
+  realpath=$(realpath "$arg")
+  dir=$(dirname "$realpath")
+  if [ -d "$dir" ] ; then
+    MOUNTDIRS+=("$dir")
+    PARAMS+=("${PREFIX}${realpath}")
+  else
+    PARAMS+=("$arg")
+  fi
+done
+
+for i in "${!MOUNTDIRS[@]}"; do [[ -z ${MOUNTDIRS[i]} ]] && unset 'MOUNTDIRS[i]'; done
+
+for mount in "${MOUNTDIRS[@]}" ; do
+  skip=false
+  for test in "${MOUNTDIRS[@]}" ; do
+    if [[ "$mount" != "$test" && "$mount" == "${test}/"* ]] ; then
+      skip=true
+      break
+    fi
+  done
+  if ! $skip ; then
+    MOUNTS+=("--volume=${mount}:${PREFIX}${mount}")
+  fi
+done
+
+# create volume for nvim if not exists
 volume="nvim-home-$(id -un)"
 docker volume inspect "${volume}" > /dev/null 2>&1 || docker volume create "${volume}" > /dev/null
 
+# run container
 docker run --rm -ti --name "nvim-${$}" \
   -v "${volume}:/home/nvim" \
-  -v "${PRDIR}":"${PREFIX}${PRDIR}" \
+  "${MOUNTS[@]}" \
   -w "${PREFIX}${PWD}" \
   --user "$(id -u):$(id -g)" \
   c8m6/nvim:latest \
-  -c "cd ${PREFIX}${PWD}" "${@}"
+  -c "cd ${PREFIX}${PWD}" "${PARAMS[@]}"
 ```
 
